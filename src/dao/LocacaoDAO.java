@@ -18,9 +18,9 @@ public class LocacaoDAO implements LocacaoInDAO {
 	}
 	
 	@Override
-	public void Inserir(Pessoa _objeto) throws SQLException {
+	public void Inserir(Locacao _objeto) throws SQLException {
 		
-		String SQL = "INSERT INTO pessoa (nome, email, tel) VALUES (?, ?, ?)";
+		String SQL = "INSERT INTO locacao (nome, email, tel) VALUES (?, ?, ?)";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
