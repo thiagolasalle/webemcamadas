@@ -7,7 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import model.Cliente;
+import model.Funcionario;
 import model.Locacao;
+import model.Pagamento;
+import model.Veiculo;
 
 public class LocacaoDAO implements LocacaoInDAO {
 
@@ -20,27 +24,29 @@ public class LocacaoDAO implements LocacaoInDAO {
 	@Override
 	public void Inserir(Locacao _objeto) throws SQLException {
 		
-		String SQL = "INSERT INTO locacao (nome, email, tel) VALUES (?, ?, ?)";
+		String SQL = "INSERT INTO locacao (data_locacao, data_entrega, status, funcionario_id, cliente_id, pagamento_id, veiculo_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
-		ps.setString(1, _objeto.getNome());
-		ps.setString(2, _objeto.getEmail());
-		ps.setString(3, _objeto.getTelefone());
+		ps.setString(1, _objeto.getDataLocacao());
+		ps.setString(2, _objeto.getDataEntrega());
+		ps.setString(2, _objeto.getStatus());
+		ps.setInt(3, _objeto.getFuncionario().getId());
+		ps.setInt(4, _objeto.getCliente().getId());
+		ps.setInt(5, _objeto.getPagamento().getId());
+		ps.setInt(6, _objeto.getVeiculo().getId());
 		
 		ps.execute();
 
 	}
 
 	@Override
-	public List<Pessoa> listarTodos() throws SQLException {
+	public List<Locacao> listarTodos() throws SQLException {
 		
-		//System.out.println();
-		
-		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+		List<Locacao> locacoes = new ArrayList<Locacao>();
 		ResultSet rs = null;
 		
-		String SQL = "SELECT id, nome, email, tel FROM pessoa";
+		String SQL = "SELECT id, data_locacao, data_entrega, status, funcionario_id, cliente_id, pagamento_id, veiculo_id FROM locacao";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
@@ -49,25 +55,38 @@ public class LocacaoDAO implements LocacaoInDAO {
 		while (rs.next()) {
 			
 			int id = rs.getInt(1);
-			String nome = rs.getString(2);
-			String email = rs.getString(3);
-			String telefone = rs.getString(4);
+			String data_locacao = rs.getString(2);
+			String data_entrega = rs.getString(3);
+			String status = rs.getString(4);
+			int funcionario_id = rs.getInt(5);
+			int cliente_id = rs.getInt(6);
+			int pagamento_id = rs.getInt(7);
+			int veiculo_id = rs.getInt(8);
 			
-			EnderecoDAO daoEnd = new EnderecoDAO(this.conexao);
-			List<Endereco> enderecos = daoEnd.listarEnderecosPorPessoa(id);
+			FuncionarioDAO daofun = new FuncionarioDAO(conexao);
+			Funcionario funcionario = daofun.buscarPorId(funcionario_id);
 			
-			Pessoa p = new Pessoa(id, nome, email, telefone, enderecos);
+			ClienteDAO daocli = new ClienteDAO(conexao);
+			Cliente cliente = daocli.buscarPorId(cliente_id);
+
+			PagamentoDAO daopag = new PagamentoDAO(conexao);
+			Pagamento pagamento = daopag.buscarPorId(pagamento_id);
 			
-			pessoas.add(p);
+			VeiculoDAO daoveic = new VeiculoDAO(conexao);
+			Veiculo veiculo = daoveic.buscarPorId(veiculo_id);
+						
+			Locacao p = new Locacao(id, data_locacao, data_entrega, status, funcionario, cliente, pagamento, veiculo);
+			
+			locacoes.add(p);
 		}
 		
-		return pessoas;
+		return locacoes;
 	}
 
 	@Override
 	public Boolean Excluir(int _id) throws SQLException {
 	
-		String SQL = "DELETE FROM pessoa WHERE id = ?";
+		String SQL = "DELETE FROM locacao WHERE id = ?";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
@@ -77,15 +96,15 @@ public class LocacaoDAO implements LocacaoInDAO {
 	}
 
 	@Override
-	public Boolean Atualizar(Pessoa _objeto) throws SQLException {
+	public Boolean Atualizar(Locacao _objeto) throws SQLException {
 
-		String SQL = "UPDATE pessoa SET nome = ?, email = ?, tel = ? WHERE id = ?";
+		String SQL = "UPDATE locacao SET data_locacao = ?, data_entrega = ?, status = ? WHERE id = ?";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
-		ps.setString(1, _objeto.getNome());
-		ps.setString(2, _objeto.getEmail());
-		ps.setString(3, _objeto.getTelefone());
+		ps.setString(1, _objeto.getDataLocacao());
+		ps.setString(2, _objeto.getDataEntrega());
+		ps.setString(3, _objeto.getStatus());
 		
 		ps.setInt(4, _objeto.getId());
 		
@@ -93,12 +112,12 @@ public class LocacaoDAO implements LocacaoInDAO {
 	}
 
 	@Override
-	public Pessoa buscarPorId(int _id) throws SQLException {
+	public Locacao buscarPorId(int _id) throws SQLException {
 		
 		ResultSet rs = null;
-		Pessoa p = null;
+		Locacao p = null;
 		
-		String SQL = "SELECT id, nome, email, tel FROM pessoa WHERE id = ?";
+		String SQL = "SELECT id, data_locacao, data_entrega, status, funcionario_id, cliente_id, pagamento_id, veiculo_id FROM locacao WHERE id = ?";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
@@ -109,17 +128,34 @@ public class LocacaoDAO implements LocacaoInDAO {
 		if (rs.next()) {
 			
 			int id = rs.getInt(1);
-			String nome = rs.getString(2);
-			String email = rs.getString(3);
-			String telefone = rs.getString(4);
+			String data_locacao = rs.getString(2);
+			String data_entrega = rs.getString(3);
+			String status = rs.getString(4);
+			int funcionario_id = rs.getInt(5);
+			int cliente_id = rs.getInt(6);
+			int pagamento_id = rs.getInt(7);
+			int veiculo_id = rs.getInt(8);
 			
-			EnderecoDAO daoEnd = new EnderecoDAO(this.conexao);
-			List<Endereco> enderecos = daoEnd.listarEnderecosPorPessoa(id);
+			FuncionarioDAO daofun = new FuncionarioDAO(conexao);
+			Funcionario funcionario = daofun.buscarPorId(funcionario_id);
 			
-			p = new Pessoa(id, nome, email, telefone, enderecos);
+			ClienteDAO daocli = new ClienteDAO(conexao);
+			Cliente cliente = daocli.buscarPorId(cliente_id);
+
+			PagamentoDAO daopag = new PagamentoDAO(conexao);
+			Pagamento pagamento = daopag.buscarPorId(pagamento_id);
+			
+			VeiculoDAO daoveic = new VeiculoDAO(conexao);
+			Veiculo veiculo = daoveic.buscarPorId(veiculo_id);
+			
+			p = new Locacao(id, data_locacao, data_entrega, status, funcionario, cliente, pagamento, veiculo);
+			
+			funcionario.getLocacoes().add(p);
+			cliente.getLocacoes().add(p);
+			pagamento.setLocacao(p);
+			veiculo.getLocacoes().add(p);
 		}
 		
 		return p;
 	}
-
 }

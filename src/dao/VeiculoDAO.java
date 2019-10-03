@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Veiculo;
-import model.Locacao;
 
 public class VeiculoDAO implements VeiculoInDAO {
 
@@ -36,9 +35,7 @@ public class VeiculoDAO implements VeiculoInDAO {
 
 	@Override
 	public List<Veiculo> listarTodos() throws SQLException {
-		
-		//System.out.println();
-		
+			
 		List<Veiculo> veiculos = new ArrayList<Veiculo>();
 		ResultSet rs = null;
 		
@@ -56,10 +53,7 @@ public class VeiculoDAO implements VeiculoInDAO {
 			String placa = rs.getString(4);
 			String status = rs.getString(5);
 			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorVeiculo(id);
-			
-			Veiculo p = new Veiculo(id, marca, cor, placa, status, locacoes);
+			Veiculo p = new Veiculo(id, marca, cor, placa, status, null);
 			
 			veiculos.add(p);
 		}
@@ -118,10 +112,7 @@ public class VeiculoDAO implements VeiculoInDAO {
 			String placa = rs.getString(4);
 			String status = rs.getString(5);
 			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorVeiculo(id);
-			
-			p = new Veiculo(id, marca, cor, placa, status, locacoes);
+			p = new Veiculo(id, marca, cor, placa, status, null);
 		}
 		
 		return p;

@@ -1,8 +1,6 @@
 package model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Pagamento implements Serializable {
 
@@ -11,18 +9,14 @@ public class Pagamento implements Serializable {
 	private int id;
 	private float valor;
 	private String forma_pagamento;
-	private List<Locacao> locacoes;
+	private Locacao locacao;
 	
-	public Pagamento() {
-		this.locacoes = new ArrayList<Locacao>();
-	}
-	
-	public Pagamento(int id, float valor, String forma_pagamento, List<Locacao> locacoes) {
+	public Pagamento(int id, float valor, String forma_pagamento, Locacao locacao) {
 		super();
 		this.id = id;
 		this.valor = valor;
 		this.forma_pagamento = forma_pagamento;
-		this.locacoes = locacoes;
+		this.setLocacao(locacao);
 	}
 
 	public int getId() {
@@ -48,15 +42,15 @@ public class Pagamento implements Serializable {
 	public void setFormaPagamento(String forma_pagamento) {
 		this.forma_pagamento = forma_pagamento;
 	}
-		
-	public List<Locacao> getLocacoes() {
-		return locacoes;
+	
+	public Locacao getLocacao() {
+		return locacao;
 	}
 
-	public void setLocacoes(List<Locacao> locacoes) {
-		this.locacoes = locacoes;
+	public void setLocacao(Locacao locacao) {
+		this.locacao = locacao;
 	}
-	
+		
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -83,4 +77,6 @@ public class Pagamento implements Serializable {
 	public String toString() {
 		return "Pagamento [id=" + id + ", valor=" + valor + ", forma_pagamento=" + forma_pagamento + "]";
 	}
+
+	
 }

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Cliente;
-import model.Locacao;
 
 public class ClienteDAO implements ClienteInDAO {
 
@@ -42,7 +41,7 @@ public class ClienteDAO implements ClienteInDAO {
 		List<Cliente> clientes = new ArrayList<Cliente>();
 		ResultSet rs = null;
 		
-		String SQL = "SELECT nome, cpf, endereco, sexo, deficiencia, idade_de_risco FROM funcionario";
+		String SQL = "SELECT nome, cpf, endereco, sexo, deficiencia, idade_de_risco FROM cliente";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
@@ -57,11 +56,8 @@ public class ClienteDAO implements ClienteInDAO {
 			String sexo = rs.getString(5);
 			Boolean deficiencia = rs.getBoolean(6);
 			Boolean idade_de_risco = rs.getBoolean(7);
-			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorCliente(id);
-			
-			Cliente p = new Cliente(id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco, locacoes);
+									
+			Cliente p = new Cliente(id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco, null);
 			
 			clientes.add(p);
 		}
@@ -106,7 +102,7 @@ public class ClienteDAO implements ClienteInDAO {
 		ResultSet rs = null;
 		Cliente p = null;
 		
-		String SQL = "SELECT id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco FROM veiculo WHERE id = ?";
+		String SQL = "SELECT id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco FROM cliente WHERE id = ?";
 		
 		PreparedStatement ps = this.conexao.prepareStatement(SQL);
 		
@@ -124,10 +120,7 @@ public class ClienteDAO implements ClienteInDAO {
 			Boolean deficiencia = rs.getBoolean(6);
 			Boolean idade_de_risco = rs.getBoolean(7);
 			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorVeiculo(id);
-			
-			p = new Cliente(id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco, locacoes);
+			p = new Cliente(id, nome, cpf, endereco, sexo, deficiencia, idade_de_risco, null);
 		}
 		
 		return p;

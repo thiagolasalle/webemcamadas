@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Funcionario;
-import model.Locacao;
 
 public class FuncionarioDAO implements FuncionarioInDAO {
 
@@ -53,11 +52,8 @@ public class FuncionarioDAO implements FuncionarioInDAO {
 			String matricula = rs.getString(3);
 			String sexo = rs.getString(4);
 			String senha = rs.getString(5);
-			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorFuncionario(id);
-			
-			Funcionario p = new Funcionario(id, nome, matricula, sexo, senha, locacoes);
+						
+			Funcionario p = new Funcionario(id, nome, matricula, sexo, senha, null);
 			
 			funcionarios.add(p);
 		}
@@ -116,10 +112,7 @@ public class FuncionarioDAO implements FuncionarioInDAO {
 			String sexo = rs.getString(4);
 			String senha = rs.getString(5);
 			
-			LocacaoDAO daoEnd = new LocacaoDAO(this.conexao);
-			List<Locacao> locacoes = daoEnd.listarLocacoesPorFuncionario(id);
-			
-			p = new Funcionario(id, nome, matricula, sexo, senha, locacoes);
+			p = new Funcionario(id, nome, matricula, sexo, senha, null);
 		}
 		
 		return p;
